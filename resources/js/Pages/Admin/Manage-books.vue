@@ -1,10 +1,7 @@
 <script setup>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
-import PrimaryButton from '@/Components/PrimaryButton.vue';
 import Breadcrump from '@/Components/Admin/Breadcrump.vue';
-import Modal from '@/Components/Admin/ModalForm.vue';
 import { Head } from '@inertiajs/vue3';
-
 </script>
 
 <template>
@@ -27,80 +24,8 @@ import { Head } from '@inertiajs/vue3';
           </Breadcrump>
         </div>
         <div class="mt-5">
-          <PrimaryButton>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-              stroke="currentColor" class="w-6 h-6">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-            </svg>
-            <span class="ms-3">Add Book</span>
-          </PrimaryButton>
-          <Modal>
-            Test
-          </Modal>
         </div>
-        <div class="mt-5">
-          <div class="relative overflow-x-auto">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-              <thead class="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th scope="col" class="px-6 py-3 rounded-l-lg">
-                    Product name
-                  </th>
-                  <th scope="col" class="px-6 py-3">
-                    Qty
-                  </th>
-                  <th scope="col" class="px-6 py-3 rounded-r-lg">
-                    Price
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="bg-white dark:bg-gray-800">
-                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Apple MacBook Pro 17"
-                  </th>
-                  <td class="px-6 py-4">
-                    1
-                  </td>
-                  <td class="px-6 py-4">
-                    $2999
-                  </td>
-                </tr>
-                <tr class="bg-white dark:bg-gray-800">
-                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Microsoft Surface Pro
-                  </th>
-                  <td class="px-6 py-4">
-                    1
-                  </td>
-                  <td class="px-6 py-4">
-                    $1999
-                  </td>
-                </tr>
-                <tr class="bg-white dark:bg-gray-800">
-                  <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                    Magic Mouse 2
-                  </th>
-                  <td class="px-6 py-4">
-                    1
-                  </td>
-                  <td class="px-6 py-4">
-                    $99
-                  </td>
-                </tr>
-              </tbody>
-              <tfoot>
-                <tr class="font-semibold text-gray-900 dark:text-white">
-                  <th scope="row" class="px-6 py-3 text-base">Total</th>
-                  <td class="px-6 py-3">3</td>
-                  <td class="px-6 py-3">21,000</td>
-                </tr>
-              </tfoot>
-            </table>
-          </div>
-
-        </div>
-
       </div>
     </div>
-</AdminLayout></template>
+  </AdminLayout>
+</template>

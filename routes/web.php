@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\CategoryController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -30,6 +31,7 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+
 // Admin Dashboard Page Route
 Route::get('/admin/', function() {
     return Inertia::render('Admin/Dashboard');
@@ -38,10 +40,6 @@ Route::get('/admin/', function() {
 Route::get('/admin/manage-books', function() {
     return Inertia::render('Admin/Manage-books');
 })->middleware(['auth', 'verified'])->name('manage-books');
-
-Route::get('/admin/book-categories', function() {
-    return Inertia::render('Admin/Book-categories');
-})->middleware(['auth', 'verified'])->name('book-categories');
 
 Route::get('/admin/book-authors', function() {
     return Inertia::render('Admin/Book-authors');
@@ -63,6 +61,11 @@ Route::get('/admin/settings', function() {
     return Inertia::render('Admin/Settings');
 })->middleware(['auth', 'verified'])->name('settings');
 
+// Admin Category Controller
+Route::middleware('auth')->group(function() {
+    Route::get('/admin/book-categories', [CategoryController::class, 'index'])->middleware(['auth', 'verified'])->name('book-categories');
+
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
