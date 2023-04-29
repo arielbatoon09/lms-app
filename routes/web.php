@@ -64,7 +64,9 @@ Route::get('/admin/settings', function() {
 // Admin Category Controller
 Route::middleware('auth')->group(function() {
     Route::get('/admin/book-categories', [CategoryController::class, 'index'])->middleware(['auth', 'verified'])->name('book-categories');
-
+    Route::post('/admin/add-category', [CategoryController::class, 'store']);
+    Route::post('/admin/delete-category/{id}', [CategoryController::class, 'destroy']);
+    Route::patch('/admin/update-category/{id}', [CategoryController::class, 'update']);
 });
 
 Route::middleware('auth')->group(function () {

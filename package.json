@@ -19,6 +19,7 @@
     "dependencies": {
         "@fortawesome/vue-fontawesome": "^3.0.3",
         "@headlessui/vue": "^1.7.13",
-        "@heroicons/vue": "^2.0.17"
+        "@heroicons/vue": "^2.0.17",
+        "@protonemedia/inertiajs-tables-laravel-query-builder": "^2.2.0"
     }
 }
