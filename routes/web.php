@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\AuthorController;
+use App\Http\Controllers\Admin\BooksController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -26,7 +29,7 @@ Route::get('/', function () {
     ]);
 });
 
-// Guest
+// User
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -37,14 +40,6 @@ Route::get('/admin/', function() {
     return Inertia::render('Admin/Dashboard');
 })->middleware(['auth', 'verified'])->name('admin');
 
-Route::get('/admin/manage-books', function() {
-    return Inertia::render('Admin/Manage-books');
-})->middleware(['auth', 'verified'])->name('manage-books');
-
-Route::get('/admin/book-authors', function() {
-    return Inertia::render('Admin/Book-authors');
-})->middleware(['auth', 'verified'])->name('book-authors');
-
 Route::get('/admin/issued-books', function() {
     return Inertia::render('Admin/Issued-books');
 })->middleware(['auth', 'verified'])->name('issued-books');
@@ -53,13 +48,25 @@ Route::get('/admin/transactions', function() {
     return Inertia::render('Admin/Transactions');
 })->middleware(['auth', 'verified'])->name('transactions');
 
-Route::get('/admin/user-management', function() {
-    return Inertia::render('Admin/User-management');
-})->middleware(['auth', 'verified'])->name('user-management');
 
 Route::get('/admin/settings', function() {
     return Inertia::render('Admin/Settings');
 })->middleware(['auth', 'verified'])->name('settings');
+
+// User Management Controller
+Route::middleware('auth')->group(function() {
+    Route::get('/admin/user-management', [UserController::class, 'index'])->middleware(['auth', 'verified'])->name('user-management');
+    Route::patch('/admin/update-user/{id}', [UserController::class, 'update']);
+    Route::post('/admin/delete-user/{id}', [UserController::class, 'destroy']);
+});
+
+// Admin Books Controller
+Route::middleware('auth')->group(function() {
+    Route::get('/admin/manage-books', [BooksController::class, 'index'])->middleware(['auth', 'verified'])->name('manage-books');
+    Route::post('/admin/add-book', [BooksController::class, 'store']);
+    Route::post('/admin/delete-book/{id}', [BooksController::class, 'destroy']);
+    Route::post('/admin/update-book/{id}', [BooksController::class, 'update']);
+});
 
 // Admin Category Controller
 Route::middleware('auth')->group(function() {
@@ -69,6 +76,15 @@ Route::middleware('auth')->group(function() {
     Route::patch('/admin/update-category/{id}', [CategoryController::class, 'update']);
 });
 
+// Admin Author Controller
+Route::middleware('auth')->group(function() {
+    Route::get('/admin/book-authors', [AuthorController::class, 'index'])->middleware(['auth', 'verified'])->name('book-authors');
+    Route::post('/admin/add-author', [AuthorController::class, 'store']);
+    Route::post('/admin/delete-author/{id}', [AuthorController::class, 'destroy']);
+    Route::patch('/admin/update-author/{id}', [AuthorController::class, 'update']);
+});
+
+// Profile Group
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

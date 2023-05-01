@@ -5,13 +5,11 @@ namespace App\Models\Admin;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Category extends Model
+class Author extends Model
 {
     use HasFactory;
-    protected $table = 'tbl_category';
+    protected $table = 'tbl_author';
     protected $fillable = [
-        'id',
-        'category_name',
+        'author_name',
     ];
-    
 }

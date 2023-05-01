@@ -5,82 +5,80 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\Admin\Category;
+use App\Models\Admin\Author;
 use Illuminate\Support\Facades\Validator;
 
-class CategoryController extends Controller
+class AuthorController extends Controller
 {
-    // Get Category Data
+    // Get Author Data
     public function index()
     {
         try{
-            return Inertia::render('Admin/Book-categories', [
-                'categories' => Category::all()->map(function ($category) {
+            return Inertia::render('Admin/Book-authors', [
+                'authors' => Author::all()->map(function ($author) {
                     return [
-                        'id' => $category->id,
-                        'category_name' => $category->category_name,
-                        'created_at' => \Carbon\Carbon::parse($category->created_at)->format('d/m/Y - H:i:s'),
-                        'updated_at' => \Carbon\Carbon::parse($category->updated_at)->format('d/m/Y - H:i:s'),
+                        'id' => $author->id,
+                        'author_name' => $author->author_name,
+                        'created_at' => \Carbon\Carbon::parse($author->created_at)->format('d/m/Y - H:i:s'),
+                        'updated_at' => \Carbon\Carbon::parse($author->updated_at)->format('d/m/Y - H:i:s'),
                     ];
                 })
             ]);
+
         }catch(\Exception $error){
             return $error->getMessage();
         }
     }
-
-    // Add Category Item
+    // Add Author Item
     public function store(Request $request)
     {
         try{
             Validator::make($request->all(), [
-                'category_name' => ['required'],
+                'author_name' => ['required'],
             ])->validate();
     
-            Category::create($request->all());
+            Author::create($request->all());
     
             return redirect()->back()
-                ->with('message', 'Created category successfully.');
+                ->with('message', 'Created author successfully.');
         }catch(\Exception $error){
             return $error->getMessage();
         }
     }
-
-    // Update Category Item
+    // Update Author Item
     public function update(Request $request, $id)
     {
         try{
             Validator::make($request->all(), [
-                'category_name' => ['required'],
+                'author_name' => ['required'],
             ])->validate();
             
-            $categories = Category::find($id);
+            $authors = Author::find($id);
 
-            if ($categories) {
-                $categories->update($request->all());
+            if ($authors) {
+                $authors->update($request->all());
 
                 return redirect()->back()
-                    ->with('message', 'Updated category successfully.');
+                    ->with('message', 'Updated author successfully.');
             }
 
         }catch(\Exception $error){
             return $error->getMessage();
         }
     }
-
-    // Delete Category Item
+    // Delete Author Item
     public function destroy($id)
     {
-        $categories = Category::find($id);
+        $authors = Author::find($id);
 
-        if($categories){
-            $categories->delete();
+        if ($authors) {
+            $authors->delete();
             return redirect()->back()
                 ->with('message', 'Category deleted successfully.');
-        }else{
+        } else {
             return redirect()->back()
                 ->with('message', 'Category not found.');
         }
 
-    }
+    }            
 }

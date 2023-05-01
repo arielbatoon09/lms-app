@@ -12,7 +12,7 @@ const form = useForm({
     password: '',
     password_confirmation: '',
     role: 0,
-    profile: 'default-profile',
+    profile: 'default-profile.png',
     terms: false,
 });
 

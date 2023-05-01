@@ -4,12 +4,12 @@ import Navmenu from '@/Components/Admin/Navmenu.vue';
 </script>
 
 <template>
-    <div class="w-screen h-screen flex overflow-y-hidden">
+    <div class="w-screen flex fixed h-full">
         <!-- Sidebar -->
-        <div class="w-[350px] h-full bg-gray-200 hidden lg:inline-block">
+        <div class="w-[350px] bg-gray-200 hidden lg:inline-block">
             <Sidebar/>
         </div>
-        <div class="w-full h-full shadow">
+        <div class="w-full h-full shadow overflow-y-auto">
             <!-- Navbar -->
             <div class="h-[70px] bg-white flex justify-between items-center mx-5">
                 <div>
@@ -20,7 +20,7 @@ import Navmenu from '@/Components/Admin/Navmenu.vue';
                 <Navmenu/>
             </div>
             <!-- Page-Content -->
-            <main class="bg-gray-50">
+            <main class="w-full h-[700px] bg-gray-50">
                 <slot/>
             </main>
         </div>

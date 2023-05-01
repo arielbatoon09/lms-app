@@ -1,6 +1,15 @@
 <script setup>
 import SideNavLink from '@/Components/Admin/SideNavLink.vue';
+import { ref } from 'vue';
+import { usePage, useForm } from '@inertiajs/vue3';
 
+const path = ref('/profile/');
+const user = usePage().props.auth.user;
+const form = useForm({
+    name: user.name,
+    role: user.is_admin,
+    profile: user.profile_img,
+});
 </script>
 
 <template>
@@ -11,13 +20,14 @@ import SideNavLink from '@/Components/Admin/SideNavLink.vue';
         </div>
     </div>
     <div class="h-100 bg-gray-800 px-[20px] flex items-center gap-3 py-3">
-        <img width="50" class="rounded-full" src="../../../images/profile/default-profile.png">
+        <img class="rounded-full" :src="path+form.profile" style="width: 64px; height: 64px;">
         <div>
-            <h3 class="text-gray-100">Ariel Batoon</h3>
-            <p class="text-gray-500">Admin</p>
+            <h3 class="text-gray-100">{{ form.name }}</h3>
+            <p class="text-gray-500" v-if="form.role == 1">Admin</p>
+            <p class="text-gray-500" v-if="form.role == 0">User</p>
         </div>
     </div>
-    <div class="h-[calc(100vh-50px)] bg-gray-800">
+    <div class="h-full bg-gray-800">
         <!-- Nav-Items -->
         <nav>
             <ul>

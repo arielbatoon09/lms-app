@@ -17,8 +17,10 @@ return new class extends Migration
             $table->string('description');
             $table->integer('category_id');
             $table->integer('author_id');
-            $table->integer('book_price');
+            $table->double('book_fees',15,2);
             $table->integer('quantity');
+            $table->integer('is_active');
+            $table->string('book_img');
             $table->timestamps();
         });
     }

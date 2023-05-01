@@ -20,6 +20,9 @@
         "@fortawesome/vue-fontawesome": "^3.0.3",
         "@headlessui/vue": "^1.7.13",
         "@heroicons/vue": "^2.0.17",
-        "@protonemedia/inertiajs-tables-laravel-query-builder": "^2.2.0"
+        "datatables.net-bs5": "^1.13.4",
+        "datatables.net-dt": "^1.13.4",
+        "datatables.net-responsive": "^2.4.1",
+        "datatables.net-vue3": "^2.1.0"
     }
 }
