@@ -1,4 +1,4 @@
-## Library Management System
+## Library Management System - On-going project
 
 <strong>Technology being used:</strong>
 <ul>
