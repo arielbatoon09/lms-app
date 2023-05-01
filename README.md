@@ -5,5 +5,6 @@
     <li>VueJS 3</li>
     <li>InertiaJS</li>
     <li>TailwindCSS</li>
+    <li>ViteJS</li>
     <li>Laravel(Version 10)</li>
 </ul
