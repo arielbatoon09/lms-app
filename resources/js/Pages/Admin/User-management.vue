@@ -38,7 +38,7 @@ const setUser = (user, id) => {
 const updateUser = (id) => {
   formModal.isOpen = null;
   editForm.is_admin = optionRole.value;
-  editForm.patch(`/admin/delete-user/${id}`);
+  editForm.patch(`/admin/update-user/${id}`);
   editForm.reset();
   window.location.reload();
 };
