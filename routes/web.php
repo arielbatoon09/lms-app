@@ -1,11 +1,12 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\AuthorController;
 use App\Http\Controllers\Admin\BooksController;
 use App\Http\Controllers\Admin\UserController;
-use App\Models\User;
+// User Side
+use App\Http\Controllers\BrowseBooksController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -30,23 +31,25 @@ Route::get('/', function () {
     ]);
 });
 
+// Temporary Route for User
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified', 'is_user'])->name('dashboard');
 
-Route::get('/books', function () {
-    return Inertia::render('Browse-books');
-})->middleware(['auth', 'verified', 'is_user'])->name('books');
 
 Route::get('/books-issued', function () {
     return Inertia::render('Books-issued');
 })->middleware(['auth', 'verified', 'is_user'])->name('books-issued');
 
+Route::get('/book-request', function () {
+    return Inertia::render('Book-request');
+})->middleware(['auth', 'verified', 'is_user'])->name('book-request');
+
 Route::get('/my-transactions', function () {
     return Inertia::render('My-transactions');
 })->middleware(['auth', 'verified', 'is_user'])->name('my-transactions');
 
-// Admin Dashboard Page Route
+// Temporary Admin Dashboard Page Route
 Route::get('/admin/', function() {
     return Inertia::render('Admin/Dashboard');
 })->middleware(['auth', 'verified', 'is_admin'])->name('admin');
@@ -63,6 +66,12 @@ Route::get('/admin/transactions', function() {
 Route::get('/admin/settings', function() {
     return Inertia::render('Admin/Settings');
 })->middleware(['auth', 'verified', 'is_admin'])->name('settings');
+
+// Browse, Request, Issued Books Route
+Route::middleware('auth')->group(function() {
+    Route::get('/books', [BrowseBooksController::class, 'index'])->middleware('verified', 'is_user')->name('books');
+    Route::get('/book-details/{id}', [BrowseBooksController::class, 'getProductDetails'])->middleware('verified', 'is_user');
+});
 
 
 // User Management Controller

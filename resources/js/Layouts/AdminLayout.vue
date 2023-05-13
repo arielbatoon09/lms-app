@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import Sidebar from '@/Components/Admin/Sidebar.vue';
 import Navmenu from '@/Components/Admin/Navmenu.vue';
 
-const toggleSidebar = ref(true);
+// const toggleSidebar = ref(true);
 </script>
 
 <template>

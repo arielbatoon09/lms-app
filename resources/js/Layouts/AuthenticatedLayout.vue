@@ -33,6 +33,9 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('books')" :active="route().current('books')">
                                     Browse Books
                                 </NavLink>
+                                <NavLink :href="route('book-request')" :active="route().current('book-request')">
+                                    Book Request
+                                </NavLink>
                                 <NavLink :href="route('books-issued')" :active="route().current('books-issued')">
                                     Issued-books
                                 </NavLink>
@@ -102,8 +105,8 @@ const showingNavigationDropdown = ref(false);
                         <ResponsiveNavLink :href="route('books')" :active="route().current('books')">
                             Browse Books
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('issued-books')" :active="route().current('issued-books')">
-                            Issued Books
+                        <ResponsiveNavLink :href="route('book-request')" :active="route().current('book-request')">
+                            Book Request
                         </ResponsiveNavLink>
                         <ResponsiveNavLink :href="route('books-issued')" :active="route().current('books-issued')">
                             Issued-books
