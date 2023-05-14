@@ -71,15 +71,18 @@ class CategoryController extends Controller
     // Delete Category Item
     public function destroy($id)
     {
-        $categories = Category::find($id);
-
-        if($categories){
-            $categories->delete();
+        try {
+            $category = Category::findOrFail($id);
+        
+            // Update the category_id of all books with this category to 0
+            $category->books()->update(['category_id' => 0]);
+        
+            $category->delete();
+        
             return redirect()->back()
                 ->with('message', 'Category deleted successfully.');
-        }else{
-            return redirect()->back()
-                ->with('message', 'Category not found.');
+        } catch (\Exception $error) {
+            return $error->getMessage();
         }
 
     }

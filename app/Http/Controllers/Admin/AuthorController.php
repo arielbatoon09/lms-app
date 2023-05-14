@@ -69,15 +69,18 @@ class AuthorController extends Controller
     // Delete Author Item
     public function destroy($id)
     {
-        $authors = Author::find($id);
-
-        if ($authors) {
-            $authors->delete();
+        try {
+            $author = Author::findOrFail($id);
+        
+            // Update the author_id of all books with this category to 0
+            $author->books()->update(['author_id' => 0]);
+        
+            $author->delete();
+        
             return redirect()->back()
-                ->with('message', 'Category deleted successfully.');
-        } else {
-            return redirect()->back()
-                ->with('message', 'Category not found.');
+                ->with('message', 'Author deleted successfully.');
+        } catch (\Exception $error) {
+            return $error->getMessage();
         }
 
     }            

@@ -5,8 +5,8 @@ use App\Http\Controllers\Admin\AuthorController;
 use App\Http\Controllers\Admin\BooksController;
 use App\Http\Controllers\Admin\UserController;
 // User Side
-use App\Http\Controllers\BrowseBooksController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserBooksController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -41,9 +41,6 @@ Route::get('/books-issued', function () {
     return Inertia::render('Books-issued');
 })->middleware(['auth', 'verified', 'is_user'])->name('books-issued');
 
-Route::get('/book-request', function () {
-    return Inertia::render('Book-request');
-})->middleware(['auth', 'verified', 'is_user'])->name('book-request');
 
 Route::get('/my-transactions', function () {
     return Inertia::render('My-transactions');
@@ -69,8 +66,10 @@ Route::get('/admin/settings', function() {
 
 // Browse, Request, Issued Books Route
 Route::middleware('auth')->group(function() {
-    Route::get('/books', [BrowseBooksController::class, 'index'])->middleware('verified', 'is_user')->name('books');
-    Route::get('/book-details/{id}', [BrowseBooksController::class, 'getProductDetails'])->middleware('verified', 'is_user');
+    Route::get('/books', [UserBooksController::class, 'index'])->middleware('verified', 'is_user')->name('books');
+    Route::get('/book-details/{id}', [UserBooksController::class, 'getBookDetails'])->middleware('verified', 'is_user');
+    Route::post('/book-details', [UserBooksController::class, 'doRequestBook'])->middleware('verified', 'is_user')->name('book.borrow');
+    Route::get('/book-request', [UserBooksController::class, 'BookRequestPage'])->middleware('verified', 'is_user')->name('book-request');
 });
 
 

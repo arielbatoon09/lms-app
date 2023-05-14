@@ -79,9 +79,14 @@ const addBook = () => {
   form.is_active = 1;
   form.category_id = optionCategories.value;
   form.author_id = optionAuthors.value;
-  form.post('/admin/add-book');
-  form.reset();
-  window.location.reload()
+  form.post('/admin/add-book')
+      .then(res => {
+        // Reload the page after form submission
+        window.location.reload();
+      })
+      .catch(error => {
+        console.log(error);
+      });
 };
 
 const deleteBook = (id) => {
@@ -247,16 +252,6 @@ const updateBook = (id) => {
                       <td class="border px-4 py-2 h-20">
                         <!-- Actions -->
                         <div class="flex justify-center gap-2">
-                          <!-- View Action -->
-                          <!-- <button class="bg-green-500 hover:bg-green-600 text-white p-2 rounded-full me-2"
-                          @click="setBook(row.id, row.book_img, row.book_name, row.description, row.category_id, row.author_id ,row.quantity, row.book_fees)">
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 25 25" stroke-width="1.5"
-                            stroke="currentColor" class="w-5 h-5">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                              d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                          </svg>
-                        </button> -->
                           <!-- Edit Action -->
                           <button class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full rounded"
                             @click="setBook(row.id, row.book_img, row.book_name, row.description, row.category_id, row.author_id, row.quantity, row.book_fees, row.is_active)">

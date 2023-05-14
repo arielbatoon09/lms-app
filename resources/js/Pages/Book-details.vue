@@ -1,27 +1,58 @@
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import ModalForm from "@/Components/Admin/ModalForm.vue";
-import { Head, Link, useForm } from "@inertiajs/vue3";
-import { ref } from "vue";
+import { Head, Link, useForm, usePage } from "@inertiajs/vue3";
+import { ref, onMounted } from "vue";
+import { useToast } from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-sugar.css';
 
 // Retrieve Data from Backend props
 defineProps({
     book: Object,
+    is_requested: Object,
 });
 
-const showModal = ref(false);
+const $toast = useToast();
 const path = ref("/uploads/");
+const minDate = new Date().toISOString().slice(0, 10);
 
 const form = useForm({
-    userID: null,
-    bookID: null,
+    showModal: null,
+    user_id: null,
+    book_id: null,
     status: null,
     to_return: null,
-    is_return: null,
 });
 
 const addBookRequest = (userID, bookID) => {
-    alert(userID + " " + bookID);
+    form.status = 2;
+    form.user_id = userID;
+    form.book_id = bookID;
+
+    form.post(route('book.borrow'), {
+        preserveScroll: true,
+        onSuccess: (res) => {
+            if (res.props.flash.message == '202') {
+                form.reset()
+                form.showModal = null;
+                $toast.success('Borrowed book successfully', {
+                    duration: 2000,
+                });
+            } else if (res.props.flash.message == '400') {
+                form.reset()
+                form.showModal = null;
+                $toast.error('Failed to request book', {
+                    duration: 2000,
+                });
+            }
+
+        },
+        onError: () => {
+            $toast.success('Please try again!', {
+                duration: 2000,
+            });
+        },
+    });
 };
 </script>
 
@@ -61,7 +92,8 @@ const addBookRequest = (userID, bookID) => {
             </nav>
             <!-- Display Book Details -->
             <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 justify-start bg-white p-4 shadow rounded-md">
-                <div>
+                <div class="relative">
+                    <span class="bg-sky-100 py-1 px-2 absolute text-blue-500" v-show="is_requested">Already requested</span>
                     <img class="rounded-lg shadow w-full" :src="path + book.book_img" />
                 </div>
                 <div class="flex flex-col justify-center">
@@ -90,20 +122,22 @@ const addBookRequest = (userID, bookID) => {
                         </p>
                         <p class="text-lg font-bold mr-2" v-if="book.is_active == 0">
                             Status:
-                            <span class="text-sm font-normal bg-red-400 py-1 px-3 rounded-lg text-white">Out of stock</span>
+                            <span class="text-sm font-normal bg-red-400 py-1 px-3 rounded-lg text-white">Inactive</span>
                         </p>
                     </div>
                     <div>
-                        <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-5 rounded" @click="showModal = true">
+                        <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-5 rounded"
+                            @click="form.showModal = book.id">
                             Borrow Now
                         </button>
                         <!-- Modal-Form -->
-                        <ModalForm v-show="showModal">
-                            <form @submit.prevent="addBook">
+                        <ModalForm v-show="form.showModal">
+                            <form @submit.prevent="addBookRequest">
                                 <div class="mb-4 px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                     <div class="mb-3">
-                                        <label for="to_return" class="block text-gray-500 text-sm font-bold mb-2">When do you want to return the book?</label>
-                                        <input type="date"
+                                        <label for="to_return" class="block text-gray-500 text-sm font-bold mb-2">When do
+                                            you want to return the book?</label>
+                                        <input type="date" :min="minDate"
                                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                             v-model="form.to_return" id="to_return" placeholder="Name of the book" />
                                     </div>
@@ -111,11 +145,12 @@ const addBookRequest = (userID, bookID) => {
                                 <!-- Actions -->
                                 <div class="bg-gray-100 px-4 py-2 sm:px-6 sm:flex sm:flex-row-reverse">
                                     <span class="flex w-full rounded-md shadow-sm sm:ml-3 sm:w-auto flex flex-row gap-2">
-                                        <button type="submit" :disabled="form.processing" @click="addBookRequest(1, 2)"
+                                        <button type="submit" :disabled="form.processing"
+                                            @click="addBookRequest($page.props.auth.user.id, book.id)"
                                             class="inline-flex justify-center w-full rounded-md border border-transparent px-8 py-2 bg-blue-500 text-base leading-6 font-medium text-white shadow-sm hover:bg-blue-600 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5">
                                             Save
                                         </button>
-                                        <span @click="showModal = false"
+                                        <span @click="form.showModal = null"
                                             class="cursor-pointer inline-flex justify-center w-full rounded-md border border-transparent px-8 py-2 bg-gray-500 text-base leading-6 font-medium text-white shadow-sm hover:bg-gray-600 focus:outline-none focus:border-gray-700 focus:shadow-outline-gray transition ease-in-out duration-150 sm:text-sm sm:leading-5">
                                             Close
                                         </span>

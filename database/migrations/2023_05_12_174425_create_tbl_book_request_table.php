@@ -16,7 +16,6 @@ return new class extends Migration
             $table->integer('user_id');
             $table->integer('book_id');
             $table->string('to_return');
-            $table->integer('is_return');
             $table->integer('status');
             $table->timestamps();
         });

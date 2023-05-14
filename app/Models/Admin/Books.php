@@ -13,6 +13,7 @@ class Books extends Model
     protected $table = 'tbl_books';
 
     protected $fillable = [
+        'id',
         'book_name',
         'description',
         'category_id',
@@ -23,18 +24,13 @@ class Books extends Model
         'book_img',
     ];
 
-    public function getCategory($data) 
+    public function category()
     {
-        $category = Category::find($data);
-        if($category){
-            return $category->category_name;
-        }
+        return $this->belongsTo(Category::class);
     }
-    public function getAuthor($data)
+
+    public function author()
     {
-        $author = Author::find($data);
-        if($author){
-            return $author->author_name;
-        }
+        return $this->belongsTo(Author::class);
     }
 }

@@ -12,9 +12,11 @@ const path = ref('/uploads/');
 
 const form = useForm({
   id: null,
+  user_id: null,
 });
 
-const goBookDetails = (id) => {
+const goBookDetails = (id, user_id) => {
+    form.user_id = user_id;
     form.get(`/book-details/${id}`);
     form.reset();
 };
@@ -31,12 +33,12 @@ const goBookDetails = (id) => {
         <div class="container px-6 py-10 mx-auto max-w-screen-xl">
             <div class="grid grid-cols-1 gap-4 md:gap-8 md:grid-cols-2 xl:grid-cols-3">
                 <div class="bg-white shadow px-5 py-6 rounded-lg cursor-pointer relative" v-for="row in books" :key="row.id"
-                    @click="goBookDetails(row.id)">
+                    @click="goBookDetails(row.id, $page.props.auth.user.id)">
                     <span class="absolute bg-blue-100 top-3 px-2 text-blue-600 rounded-lg">Tap to see details</span>
                     <img class="object-cover object-center w-full h-64 rounded-lg lg:h-70" :src="path + row.book_img" />
                     <div class="mt-8">
                         <!-- Book Category -->
-                        <span class="text-blue-500 font-normal">{{ row.category }}</span>
+                        <span class="text-blue-500 font-normal">{{ row.category != 0 ? row.category : Unknown }}</span>
                         <!-- Book Title -->
                         <h3 class="mt-2 text-xl font-semibold text-gray-800 dark:text-white">
                             {{ row.book_name }}
