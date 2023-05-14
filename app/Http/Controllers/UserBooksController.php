@@ -36,34 +36,6 @@ class UserBooksController extends Controller
             return $error->getMessage();
         }
     }
-    // To Acquire Data and Render to Book Request Page
-    public function BookRequestPage()
-    {
-        try {
-            $user_id = auth()->user()->id;
-
-            return Inertia::render('Book-request', [
-                'books' => BookRequest::with('book.category', 'book.author')
-                    ->where('user_id', $user_id)
-                    ->get()
-                    ->map(function ($book) {
-                        return [
-                            'id' => $book->id,
-                            'user_id' => $book->user_id,
-                            'book_id' => $book->book_id,
-                            'to_return' => $book->to_return,
-                            'status' => $book->status,
-                            'book_img' => $book->book->book_img,
-                            'book_name' => $book->book->book_name,
-                            'category_name' => $book->book->category->category_name ?? 'No category available',
-                            'author_name' => $book->book->author->author_name ?? 'No author available',
-                        ];
-                    })
-            ]);
-        } catch (\Exception $error) {
-            return $error->getMessage();
-        }
-    }
 
     // To Get Specific Book Details
     public function getBookDetails(Request $request, $id)
@@ -102,10 +74,45 @@ class UserBooksController extends Controller
             return $error->getMessage();
         }
     }
+
+    // To Acquire Data and Render to Book Request Page
+    public function BookRequestPage()
+    {
+        try {
+            $user_id = auth()->user()->id;
+
+            return Inertia::render('Book-request', [
+                'books' => BookRequest::with('book.category', 'book.author')
+                    ->where('user_id', $user_id)
+                    ->get()
+                    ->map(function ($book) {
+                        return [
+                            'id' => $book->id,
+                            'user_id' => $book->user_id,
+                            'book_id' => $book->book_id,
+                            'to_return' => $book->to_return,
+                            'status' => $book->status,
+                            'book_img' => $book->book->book_img,
+                            'book_name' => $book->book->book_name,
+                            'category_name' => $book->book->category->category_name ?? 'No category available',
+                            'author_name' => $book->book->author->author_name ?? 'No author available',
+                        ];
+                    })
+            ]);
+        } catch (\Exception $error) {
+            return $error->getMessage();
+        }
+    }
+
     // To Borrow A Book
     public function doRequestBook(Request $request)
     {
         try {
+            $to_return = \Carbon\Carbon::parse($request->to_return)->format('Y-m-d');
+            $current_time = \Carbon\Carbon::now()->format('H:i:s');
+            $to_return = "{$to_return} {$current_time}";
+            $request->merge(['to_return' => $to_return]);
+
             Validator::make($request->all(), [
                 'user_id' => ['required'],
                 'book_id' => ['required'],

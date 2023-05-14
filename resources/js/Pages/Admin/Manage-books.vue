@@ -80,13 +80,13 @@ const addBook = () => {
   form.category_id = optionCategories.value;
   form.author_id = optionAuthors.value;
   form.post('/admin/add-book')
-      .then(res => {
-        // Reload the page after form submission
-        window.location.reload();
-      })
-      .catch(error => {
-        console.log(error);
-      });
+    .then(res => {
+      // Reload the page after form submission
+      window.location.reload();
+    })
+    .catch(error => {
+      console.log(error);
+    });
 };
 
 const deleteBook = (id) => {
@@ -235,7 +235,7 @@ const updateBook = (id) => {
                   </thead>
                   <tbody>
                     <tr v-for="(row, index) in books" :key="row.id">
-                      <td class="border px-4 py-2">{{ index+1 }}</td>
+                      <td class="border px-4 py-2">{{ index + 1 }}</td>
                       <td class="border px-4 py-2 w-20"><img :src="path + row.book_img"
                           style="width: 64px; height: 64px;" /></td>
                       <td class="border px-4 py-2">{{ row.book_name }}</td>
