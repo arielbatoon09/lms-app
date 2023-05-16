@@ -19,7 +19,7 @@ const path = ref('/uploads/');
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">Book Request List</h2>
         </template>
         <!-- Books Display -->
-        <div class="container px-6 py-10 mx-auto max-w-screen-xl">
+        <div class="px-6 py-10 mx-auto max-w-screen-xl">
             <div class="grid grid-cols-1 gap-4 md:gap-8 md:grid-cols-2 xl:grid-cols-3">
                 <div class="bg-white shadow px-5 py-6 rounded-lg relative" v-for="row in books" :key="row.id">
                     <img class="object-cover object-center w-full h-64 rounded-lg lg:h-70" :src="path + row.book_img" />

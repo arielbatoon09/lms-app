@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Admin\Books;
 use App\Models\BookRequest;
 use App\Models\IssuedBooks;
+use App\Models\Invoices;
 
 class BookRequestController extends Controller
 {
@@ -58,7 +60,7 @@ class BookRequestController extends Controller
                     // Check if the book is already issued
                     $issuedBook = IssuedBooks::where('book_id', $bookRequest->book_id)
                         ->where('user_id', $bookRequest->user_id)
-                        ->where('is_return', 0)
+                        // ->where('is_return', 0)
                         ->first();
 
                     if (!$issuedBook) {
@@ -70,9 +72,68 @@ class BookRequestController extends Controller
                         $issuedBook->is_return = 0; // Default value
                         $issuedBook->save();
 
+                        // Insert Invoice into the Invoices model
+                        $insertInvoice = new Invoices();
+                        $insertInvoice->user_id = $bookRequest->user_id;
+                        $insertInvoice->book_id = $bookRequest->book_id;
+                        $insertInvoice->book_fees = $bookRequest->book->book_fees;
+
+                        if($bookRequest->book->book_fees > 0){
+                            $insertInvoice->action = 0;
+                            $insertInvoice->save();
+                        }else{
+                            $insertInvoice->action = 1;
+                            $insertInvoice->save();
+                        }
+                        
+                        // Deduct 1 from the quantity column in the Books model if the status is not equal to 2
+                        if ($request->status != 2) {
+                            $book = Books::find($bookRequest->book_id);
+                            if ($book) {
+                                $book->quantity = $book->quantity - 1;
+                                if ($book->quantity == 0) {
+                                    $book->is_active = 0;
+                                }
+                                $book->update();
+                            }
+                        }
+
                         return redirect()->back()
                             ->with('message', 'Book request has been approved and book has been issued.');
                     } else {
+                        $issuedBook = new IssuedBooks();
+                        $issuedBook->book_id = $bookRequest->book_id;
+                        $issuedBook->user_id = $bookRequest->user_id;
+                        $issuedBook->to_return = $bookRequest->to_return;
+                        $issuedBook->is_return = 0; // Default value
+                        $issuedBook->save();
+                        
+                        // Insert Invoice into the Invoices model
+                        $insertInvoice = new Invoices();
+                        $insertInvoice->user_id = $bookRequest->user_id;
+                        $insertInvoice->book_id = $bookRequest->book_id;
+                        $insertInvoice->book_fees = $bookRequest->book->book_fees;
+
+                        if($bookRequest->book->book_fees > 0){
+                            $insertInvoice->action = 0;
+                            $insertInvoice->save();
+                        }else{
+                            $insertInvoice->action = 1;
+                            $insertInvoice->save();
+                        }
+
+                        // Deduct 1 from the quantity column in the Books model if the status is not equal to 2
+                        if ($request->status != 2) {
+                            $book = Books::find($bookRequest->book_id);
+                            if ($book) {
+                                $book->quantity = $book->quantity - 1;
+                                if ($book->quantity == 0) {
+                                    $book->is_active = 0;
+                                }
+                                $book->update();
+                            }
+                        }
+
                         return redirect()->back()
                             ->with('message', 'Updated book request successfully.');
                     }
@@ -80,16 +141,34 @@ class BookRequestController extends Controller
                     // Check if the book is already issued
                     $issuedBook = IssuedBooks::where('book_id', $bookRequest->book_id)
                         ->where('user_id', $bookRequest->user_id)
-                        ->where('is_return', 0)
                         ->first();
 
                     if ($issuedBook) {
-                        // Delete the issued book record
-                        $issuedBook->delete();
+                        // Add 1 to the quantity column in the Books model
+                        $book = Books::find($bookRequest->book_id);
+                        if ($book) {
+                            if ($book->quantity > 0) {
+                                $book->is_active = 1;
+                            }
+                            $book->update();
+                        }
                     }
 
+                    // To update Book Request Status
                     $bookRequest->status = $request->status;
                     $bookRequest->update();
+
+                    // Deduct 1 from the quantity column in the Books model if the status is not equal to 2
+                    if ($request->status == 1) {
+                        $book = Books::find($bookRequest->book_id);
+                        if ($book) {
+                            $book->quantity = $book->quantity - 1;
+                            if ($book->quantity == 0) {
+                                $book->is_active = 0;
+                            }
+                            $book->update();
+                        }
+                    }
 
                     return redirect()->back()
                         ->with('message', 'Updated book request successfully.');
@@ -102,22 +181,25 @@ class BookRequestController extends Controller
             return $error->getMessage();
         }
     }
-
     // To Delete Book Request
     public function deleteBookRequest(Request $request)
     {
-        Validator::make($request->all(), [
-            'id' => ['required'],
-        ])->validate();
+        try {
+            Validator::make($request->all(), [
+                'id' => ['required'],
+            ])->validate();
 
-        $bookRequest = BookRequest::find($request->id);
-        if ($bookRequest) {
-            $bookRequest->delete();
-            return redirect()->back()
-                ->with('message', 'Deleted book successfully.');
-        } else {
-            return redirect()->back()
-                ->with('message', 'Failed book request delete.');
+            $bookRequest = BookRequest::find($request->id);
+            if ($bookRequest) {
+                $bookRequest->delete();
+                return redirect()->back()
+                    ->with('message', 'Deleted book successfully.');
+            } else {
+                return redirect()->back()
+                    ->with('message', 'Failed book request delete.');
+            }
+        } catch (\Exception $error) {
+            return $error->getMessage();
         }
     }
 }

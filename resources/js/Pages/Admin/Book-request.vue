@@ -1,7 +1,6 @@
 <script setup>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import Breadcrump from '@/Components/Admin/Breadcrump.vue';
-import ActionButton from '@/Components/Admin/ActionButton.vue';
 import ModalForm from '@/Components/Admin/ModalForm.vue';
 import { ref, reactive } from 'vue';
 import { useForm, Head } from '@inertiajs/vue3';
@@ -10,10 +9,7 @@ import DataTablesCore from 'datatables.net-bs5';
 import 'datatables.net-responsive';
 
 // Declaration
-const showModal = ref(false);
-const isClose = ref(true);1
-const optionAuthors = ref('disabled');
-const optionCategories = ref('disabled');
+const isClose = ref(true);
 const selectedStatus = ref('disabled');
 const path = ref('/uploads/');
 
@@ -98,6 +94,7 @@ const deleteBookRequest =(id)=> {
                                         <tr class="bg-gray-100">
                                             <th class="border px-4 py-2 w-5 text-left">No.</th>
                                             <th class="border px-4 py-2 text-left">Image</th>
+                                            <th class="border px-4 py-2 w-0 text-left">Issued No.</th>
                                             <th class="border px-4 py-2 text-left">Borrower</th>
                                             <th class="border px-4 py-2 text-left">Book Name</th>
                                             <th class="border px-4 py-2 text-left">Fees ₱</th>
@@ -111,6 +108,7 @@ const deleteBookRequest =(id)=> {
                                             <td class="border px-4 py-2">{{ index+1 }}</td>
                                             <td class="border px-4 py-2 w-20"><img :src="path+row.book_img"
                                                     style="width: 64px; height: 64px;" /></td>
+                                            <td class="border px-4 py-2">{{ row.id }}</td>            
                                             <td class="border px-4 py-2">{{ row.user_name }}</td>        
                                             <td class="border px-4 py-2">{{ row.book_name }}</td>
                                             <td class="border px-4 py-2">₱ {{ row.book_fees }}.00</td>
@@ -128,7 +126,7 @@ const deleteBookRequest =(id)=> {
                                                 <!-- Actions -->
                                                 <div class="flex justify-center gap-2">
                                                     <!-- Edit Action -->
-                                                    <button
+                                                    <button v-show="row.status != 1"
                                                         class="bg-blue-500 hover:bg-blue-600 text-white p-2 rounded-full rounded"
                                                         @click="getID(row.id)">
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none"

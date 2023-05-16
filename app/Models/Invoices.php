@@ -6,27 +6,21 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Admin\Books;
 
-class IssuedBooks extends Model
+class Invoices extends Model
 {
     use HasFactory;
 
-    protected $table = 'tbl_issued_books';
+    protected $table = 'tbl_invoices';
 
     protected $fillable = [
         'id',
-        'book_id',
-        'user_id',
-        'to_return',
-        'is_return',
+        'issued_id',
+        'payment_method',
+        'action',
     ];
 
-    public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
     public function book()
     {
         return $this->belongsTo(Books::class);
     }
-
 }

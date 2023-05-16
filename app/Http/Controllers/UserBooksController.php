@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 use App\Models\Admin\Books;
 use App\Models\BookRequest;
+use App\Models\IssuedBooks;
 
 class UserBooksController extends Controller
 {
@@ -59,6 +60,7 @@ class UserBooksController extends Controller
 
             $bookRequest = BookRequest::where('user_id', $request->user_id)
                 ->where('book_id', $id)
+                ->where('status', 2)
                 ->first();
 
             if ($bookDetails) {
@@ -128,6 +130,7 @@ class UserBooksController extends Controller
                 // 3. Find the BookRequest by user_id and book_id
                 $bookRequest = BookRequest::where('user_id', $request->user_id)
                     ->where('book_id', $request->book_id)
+                    ->where('status', 2)
                     ->first();
 
                 // 4. Check if the BookRequest already exists
@@ -143,6 +146,53 @@ class UserBooksController extends Controller
                 return redirect()->back()
                     ->with('message', '400');
             }
+        } catch (\Exception $error) {
+            return $error->getMessage();
+        }
+    }
+
+    // To Get List of user Issued Books
+    public function getIssuedBookDetails()
+    {
+        try {
+            $user_id = auth()->user()->id;
+            $issuedBooks = IssuedBooks::where('user_id', $user_id)
+            ->with(['book'])
+            ->get()
+                ->map(function ($book) {
+                    $toReturn = \Carbon\Carbon::parse($book->to_return);
+                    $toReturnOutput = $toReturn->diffForHumans();
+                    $now = \Carbon\Carbon::now();
+                    
+                    $isOverdue = false;
+                    if ($book->is_return === 0) {
+                        $isOverdue = $now->greaterThan($toReturn);
+                        $book->is_return = $isOverdue ? 2 : 0;
+                    } else if ($book->is_return !== 1) {
+                        $isOverdue = $now->greaterThan($toReturn);
+                    }
+
+                    return [
+                        'id' => $book->id,
+                        'book_id' => $book->book_id,
+                        'book_name' => $book->book->book_name,
+                        'description' => $book->book->description,
+                        'category' => $book->book->category->category_name ?? 'No category available',
+                        'category_id' => $book->book->category_id,
+                        'author' => $book->book->author->author_name ?? 'No author available',
+                        'author_id' => $book->book->author_id,
+                        'book_fees' => $book->book->book_fees,
+                        'quantity' => $book->book->quantity,
+                        'is_return' => $book->is_return,
+                        'book_img' => $book->book->book_img,
+                        'to_return' => $toReturnOutput,
+                        'is_overdue' => $isOverdue,
+                    ];
+                });
+
+            return Inertia::render('Book-issued', [
+                'books' => $issuedBooks,
+            ]);
         } catch (\Exception $error) {
             return $error->getMessage();
         }

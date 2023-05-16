@@ -26,7 +26,7 @@ const showingNavigationDropdown = ref(false);
                             </div>
 
                             <!-- Navigation Links -->
-                            <div class="hidden space-x-8 lg:-my-px lg:ml-10 lg:flex">
+                            <div class="hidden gap-4 lg:-my-px lg:ml-10 lg:flex">
                                 <NavLink :href="route('dashboard')" :active="route().current('dashboard')">
                                     Dashboard
                                 </NavLink>
@@ -39,8 +39,8 @@ const showingNavigationDropdown = ref(false);
                                 <NavLink :href="route('books-issued')" :active="route().current('books-issued')">
                                     Issued-books
                                 </NavLink>
-                                <NavLink :href="route('my-transactions')" :active="route().current('my-transactions')">
-                                    Transactions
+                                <NavLink :href="route('invoices.user')" :active="route().current('invoices.user')">
+                                    Invoices
                                 </NavLink>
                             </div>
                         </div>
@@ -111,8 +111,8 @@ const showingNavigationDropdown = ref(false);
                         <ResponsiveNavLink :href="route('books-issued')" :active="route().current('books-issued')">
                             Issued-books
                         </ResponsiveNavLink>
-                        <ResponsiveNavLink :href="route('my-transactions')" :active="route().current('my-transactions')">
-                            Transactions
+                        <ResponsiveNavLink :href="route('invoices.user')" :active="route().current('invoices.user')">
+                            Invoices
                         </ResponsiveNavLink>
                     </div>
 

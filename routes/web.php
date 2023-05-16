@@ -5,8 +5,10 @@ use App\Http\Controllers\Admin\AuthorController;
 use App\Http\Controllers\Admin\BooksController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BookRequestController;
+use App\Http\Controllers\Admin\IssuedBooksController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserBooksController;
+use App\Http\Controllers\UserInvoices;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -42,30 +44,30 @@ Route::middleware('auth')->group(function () {
     Route::get('/book-details/{id}', [UserBooksController::class, 'getBookDetails'])->middleware('verified', 'is_user');
     Route::post('/book-details', [UserBooksController::class, 'doRequestBook'])->middleware('verified', 'is_user')->name('book.borrow');
     Route::get('/book-request', [UserBooksController::class, 'BookRequestPage'])->middleware('verified', 'is_user')->name('book-request');
+    Route::get('/book-issued', [UserBooksController::class, 'getIssuedBookDetails'])->middleware('verified', 'is_user')->name('books-issued');
 
     // Profile Management
     Route::get('/settings', [ProfileController::class, 'edit'])->middleware('auth', 'verified', 'is_user')->name('profile.edit');
     Route::patch('/settings', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/settings', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // Invoices
+    Route::get('/invoices', [UserInvoices::class, 'index'])->middleware('verified', 'is_user')->name('invoices.user');
+
     // Temporary Route for User
     Route::get('/dashboard', function () {
         return Inertia::render('Dashboard');
     })->middleware(['auth', 'verified', 'is_user'])->name('dashboard');
 
-
-    Route::get('/books-issued', function () {
-        return Inertia::render('Books-issued');
-    })->middleware(['auth', 'verified', 'is_user'])->name('books-issued');
-
-
-    Route::get('/my-transactions', function () {
-        return Inertia::render('My-transactions');
-    })->middleware(['auth', 'verified', 'is_user'])->name('my-transactions');
 });
 
 // 2. Admin Controllers
 Route::middleware('auth')->group(function () {
+    // Temporary Admin Page Route
+    Route::get('/admin/', function () {
+        return Inertia::render('Admin/Dashboard');
+    })->middleware(['auth', 'verified', 'is_admin'])->name('admin');
+
     // Manage Books
     Route::get('/admin/manage-books', [BooksController::class, 'index'])->middleware(['verified', 'is_admin'])->name('manage-books');
     Route::post('/admin/add-book', [BooksController::class, 'store']);
@@ -89,14 +91,11 @@ Route::middleware('auth')->group(function () {
     Route::put('/admin/book-request', [BookRequestController::class, 'updateBookRequest'])->middleware(['verified', 'is_admin'])->name('admin-book-request.update');
     Route::delete('/admin/book-request', [BookRequestController::class, 'deleteBookRequest'])->middleware(['verified', 'is_admin'])->name('admin-book-request.destroy');
 
-    // Temporary Admin Page Route
-    Route::get('/admin/', function () {
-        return Inertia::render('Admin/Dashboard');
-    })->middleware(['auth', 'verified', 'is_admin'])->name('admin');
+    // Manage Book Issued
+    Route::get('/admin/issued-books', [IssuedBooksController::class, 'getAllIssuedBookDetails'])->middleware(['verified', 'is_admin'])->name('issued-books');
+    Route::put('/admin/issued-books', [IssuedBooksController::class, 'updateBookIssued'])->middleware('verified', 'is_admin')->name('issued-books.update');
+    Route::delete('/admin/issued-books', [IssuedBooksController::class, 'deleteBookIssued'])->middleware('verified', 'is_admin')->name('issued-books.destroy');
 
-    Route::get('/admin/issued-books', function () {
-        return Inertia::render('Admin/Issued-books');
-    })->middleware(['auth', 'verified', 'is_admin'])->name('issued-books');
 
     Route::get('/admin/transactions', function () {
         return Inertia::render('Admin/Transactions');

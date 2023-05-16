@@ -14,7 +14,12 @@ defineProps({
 
 const $toast = useToast();
 const path = ref("/uploads/");
-const minDate = new Date().toISOString().slice(0, 10);
+
+// Input Date Customization
+const today = new Date();
+const tomorrow = new Date(today);
+tomorrow.setDate(today.getDate() + 1);
+const minDate = tomorrow.toISOString().slice(0, 10);
 
 const form = useForm({
     showModal: null,
