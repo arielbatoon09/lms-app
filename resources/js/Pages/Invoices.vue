@@ -3,6 +3,8 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { reactive } from 'vue';
 import { useForm, Head } from '@inertiajs/vue3';
 import Swal from 'sweetalert2';
+import { useToast } from 'vue-toast-notification';
+import 'vue-toast-notification/dist/theme-sugar.css';
 
 const selectMOD = reactive('disabled');
 
@@ -11,7 +13,19 @@ defineProps({
     invoice: Object,
 });
 
-const handleMOD = (selectMOD) => {
+const $toast = useToast();
+
+const form = useForm({
+    id: null,
+    book_fees: null,
+    mop: null,
+})
+
+const handleMOD = (selectMOD, id, book_fees) => {
+    form.id = id;
+    form.book_fees = book_fees;
+    form.mop = selectMOD;
+
     if (selectMOD == 'Paypal') {
         Swal.fire({
             title: 'Do you want to use PayPal?',
@@ -25,11 +39,18 @@ const handleMOD = (selectMOD) => {
             showCancelButton: true,
         }).then((result) => {
             if (result.isConfirmed) {
-                Swal.fire(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                )
+                form.post(route('invoices.makePayments'), {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        form.reset()
+
+                    },
+                    onError: () => {
+                        $toast.error('Please try again!', {
+                            duration: 2000,
+                        });
+                    },
+                });
             }
         })
     } else if (selectMOD == 'Over-The-Counter') {
@@ -45,11 +66,20 @@ const handleMOD = (selectMOD) => {
             showCancelButton: true,
         }).then((result) => {
             if (result.isConfirmed) {
-                Swal.fire(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                )
+                form.post(route('invoices.makePayments'), {
+                    preserveScroll: true,
+                    onSuccess: () => {
+                        form.reset();
+                        $toast.success('Pay your invoice Over-The-Counter!', {
+                            duration: 2000,
+                        });
+                    },
+                    onError: () => {
+                        $toast.error('Please try again!', {
+                            duration: 2000,
+                        });
+                    },
+                });
             }
         })
     }
@@ -116,7 +146,7 @@ const handleMOD = (selectMOD) => {
                                             class="py-1 px-3 rounded-lg text-orange-600 bg-orange-50 whitespace-nowrap">Over-The-Counter</span>
                                     </td>
                                     <td class="px-6 py-4" v-if="row.action == 0">
-                                        <select v-model="selectMOD" @change="handleMOD(selectMOD)"
+                                        <select v-model="selectMOD" @change="handleMOD(selectMOD, row.id, row.book_fees)"
                                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block pe-8 px-4 py-2.3">
                                             <option value="disabled" disabled>Select Payment</option>
                                             <option value="Paypal">PayPal</option>

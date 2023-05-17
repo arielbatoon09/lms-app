@@ -20,10 +20,12 @@
         "@fortawesome/vue-fontawesome": "^3.0.3",
         "@headlessui/vue": "^1.7.13",
         "@heroicons/vue": "^2.0.17",
+        "chart.js": "^4.3.0",
         "datatables.net-bs5": "^1.13.4",
         "datatables.net-dt": "^1.13.4",
         "datatables.net-responsive": "^2.4.1",
         "datatables.net-vue3": "^2.1.0",
+        "vue-chartjs": "^5.2.0",
         "vue-sweetalert2": "^5.0.5",
         "vue-toast-notification": "3.0"
     }

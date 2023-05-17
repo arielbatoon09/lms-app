@@ -13,6 +13,7 @@
         "laravel/tinker": "^2.8",
         "protonemedia/inertiajs-tables-laravel-query-builder": "^2.2",
         "spatie/laravel-query-builder": "^5.2",
+        "srmklive/paypal": "~3.0",
         "tightenco/ziggy": "^1.0"
     },
     "require-dev": {

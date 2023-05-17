@@ -7,3 +7,7 @@
     background-size: fill;
 }
 
+html,
+body{
+    overflow-x: hidden;
+}

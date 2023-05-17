@@ -14,13 +14,18 @@ class Invoices extends Model
 
     protected $fillable = [
         'id',
-        'issued_id',
-        'payment_method',
+        'user_id',
+        'book_id',
+        'book_fees',
         'action',
     ];
 
     public function book()
     {
         return $this->belongsTo(Books::class);
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
