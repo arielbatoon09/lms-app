@@ -7,7 +7,8 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\BookRequestController;
 use App\Http\Controllers\Admin\IssuedBooksController;
 use App\Http\Controllers\Admin\TransactionsController;
-use App\Http\Controllers\Admin\Dashboard;
+use App\Http\Controllers\Admin\AdminDashboardController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserBooksController;
 use App\Http\Controllers\UserInvoices;
@@ -37,7 +38,9 @@ Route::get('/', function () {
 
 // 1. User Controller
 Route::middleware('auth')->group(function () {
-
+    // Dashboard
+    Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('verified', 'is_user')->name('dashboard');
+    
     // Browse, Request, Issued Books Route
     Route::get('/books', [UserBooksController::class, 'index'])->middleware('verified', 'is_user')->name('books');
     Route::get('/book-details/{id}', [UserBooksController::class, 'getBookDetails'])->middleware('verified', 'is_user');
@@ -54,17 +57,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/invoices', [UserInvoices::class, 'index'])->middleware('verified', 'is_user')->name('invoices.user');
     Route::post('/invoices', [UserInvoices::class, 'handlePayment'])->middleware('verified', 'is_user')->name('invoices.makePayments');
 
-    // Temporary Route for User
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->middleware(['auth', 'verified', 'is_user'])->name('dashboard');
-
 });
 
 // 2. Admin Controllers
 Route::middleware('auth')->group(function () {
     // Dashboard
-    Route::get('/admin', [Dashboard::class, 'index'])->middleware(['auth', 'verified', 'is_admin'])->name('admin');
+    Route::get('/admin', [AdminDashboardController::class, 'index'])->middleware(['auth', 'verified', 'is_admin'])->name('admin');
 
     // User Management
     Route::get('/admin/user-management', [UserController::class, 'index'])->middleware(['auth', 'verified', 'is_admin'])->name('user-management');

@@ -10,7 +10,7 @@ use App\Models\User;
 use App\Models\Admin\Books;
 use App\Models\BookRequest;
 
-class Dashboard extends Controller
+class AdminDashboardController extends Controller
 {
     //
     public function index()
@@ -23,7 +23,7 @@ class Dashboard extends Controller
             $sumTotalIncome = Invoices::where('action', 1)->sum('book_fees');
     
             $chartData = $invoiceList->groupBy(function ($invoice) {
-                return Carbon::parse($invoice->created_at)->format('F Y');
+                return Carbon::parse($invoice->updated_at)->format('F Y');
             })->map(function ($group) {
                 return $group->sum('book_fees');
             });

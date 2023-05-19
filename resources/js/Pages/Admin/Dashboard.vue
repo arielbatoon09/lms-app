@@ -1,7 +1,7 @@
 <script setup>
 import AdminLayout from '@/Layouts/AdminLayout.vue';
 import { ref, onMounted } from 'vue';
-import { Head, usePage } from '@inertiajs/vue3';
+import { Head } from '@inertiajs/vue3';
 import { Bar } from 'vue-chartjs';
 import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
 
@@ -33,12 +33,36 @@ const props = defineProps({
 const loaded = ref(false);
 const chartData = ref(null);
 
+
 const chartOptions = ref({
   responsive: true,
   plugins: {
     title: {
       display: true,
       text: 'Monthly Sales Analytics',
+    },
+    legend: {
+      display: true,
+      position: 'top',
+    },
+    tooltip: {
+      enabled: true,
+      intersect: false,
+      callbacks: {
+        label: (context) => {
+          let label = '';
+
+          if (context.dataset.label) {
+            label += `${context.dataset.label}: `;
+          }
+
+          if (context.parsed.y !== null) {
+            label += `₱${context.parsed.y.toFixed(2)}`;
+          }
+
+          return label;
+        },
+      },
     },
   },
 });
