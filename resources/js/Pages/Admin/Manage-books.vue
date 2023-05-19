@@ -79,14 +79,13 @@ const addBook = () => {
   form.is_active = 1;
   form.category_id = optionCategories.value;
   form.author_id = optionAuthors.value;
-  form.post('/admin/add-book')
-    .then(res => {
-      // Reload the page after form submission
+  form.post('/admin/add-book',{
+    preserveScroll: true,
+    onSuccess: () => {
+      form.reset();
       window.location.reload();
-    })
-    .catch(error => {
-      console.log(error);
-    });
+    }
+  })
 };
 
 const deleteBook = (id) => {

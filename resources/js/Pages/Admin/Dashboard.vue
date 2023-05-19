@@ -95,7 +95,7 @@ onMounted(() => {
   <AdminLayout>
     <!-- Body-Content -->
     <div class="w-full h-full px-5 lg:px-14 py-10">
-      <div class="h-screen">
+      <div class="h-full">
         <!-- Total and Status -->
         <h2 class="text-gray-600 font-bold text-xl mb-2">LMS Dashboard</h2>
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-10">

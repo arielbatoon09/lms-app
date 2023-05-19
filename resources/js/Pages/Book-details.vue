@@ -17,9 +17,10 @@ const path = ref("/uploads/");
 
 // Input Date Customization
 const today = new Date();
-const tomorrow = new Date(today);
-tomorrow.setDate(today.getDate() + 1);
-const minDate = tomorrow.toISOString().slice(0, 10);
+const maxDate = new Date(today);
+maxDate.setDate(today.getDate() + 30);
+const minDate = today.toISOString().slice(0, 10);
+const maxDateISO = maxDate.toISOString().slice(0, 10);
 
 const form = useForm({
     showModal: null,
@@ -142,7 +143,7 @@ const addBookRequest = (userID, bookID) => {
                                     <div class="mb-3">
                                         <label for="to_return" class="block text-gray-500 text-sm font-bold mb-2">When do
                                             you want to return the book?</label>
-                                        <input type="date" :min="minDate"
+                                        <input type="date" :min="minDate" :max="maxDateISO"
                                             class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                             v-model="form.to_return" id="to_return" placeholder="Name of the book" />
                                     </div>

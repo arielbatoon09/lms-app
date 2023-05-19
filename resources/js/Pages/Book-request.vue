@@ -1,14 +1,32 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import { Head } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
+const path = ref('/uploads/');
 // Retrieve Data from Backend props
-defineProps({
+const props = defineProps({
     books: Object,
 });
 
-const path = ref('/uploads/');
+// Search Feature
+const selectedStatus = ref('3');
+
+const filteredBooks = computed(() => {
+    const filtered = Object.values(props.books).filter((book) => {
+        if (selectedStatus.value === '0') {
+            return book.status === 0;
+        } else if (selectedStatus.value === '1') {
+            return book.status === 1;
+        } else if (selectedStatus.value === '2') {
+            return book.status === 2;
+        } else {
+            return true; // Show all books if no specific status is selected
+        }
+    });
+
+    return filtered;
+});
 </script>
 
 <template>
@@ -20,8 +38,19 @@ const path = ref('/uploads/');
         </template>
         <!-- Books Display -->
         <div class="px-6 py-10 mx-auto max-w-screen-xl">
+            <div class="flex justify-between mb-4 flex-col md:flex-row gap-3">
+                <div>
+                    <select class="appearance-none w-full md:w-48 px-4 py-2 border border-gray-300 rounded-md "
+                        v-model="selectedStatus">
+                        <option value="3">All</option>
+                        <option value="2">Pending</option>
+                        <option value="1">Approved</option>
+                        <option value="0">Rejected</option>
+                    </select>
+                </div>
+            </div>
             <div class="grid grid-cols-1 gap-4 md:gap-8 md:grid-cols-2 xl:grid-cols-3">
-                <div class="bg-white shadow px-5 py-6 rounded-lg relative" v-for="row in books" :key="row.id">
+                <div class="bg-white shadow px-5 py-6 rounded-lg relative" v-for="row in filteredBooks" :key="row.id">
                     <img class="object-cover object-center w-full h-64 rounded-lg lg:h-70" :src="path + row.book_img" />
                     <div class="mt-8">
                         <!-- Book Category -->

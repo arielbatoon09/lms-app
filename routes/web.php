@@ -27,19 +27,19 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+// Route::get('/', function () {
+//     return Inertia::render('Welcome', [
+//         'canLogin' => Route::has('login'),
+//         'canRegister' => Route::has('register'),
+//         'laravelVersion' => Application::VERSION,
+//         'phpVersion' => PHP_VERSION,
+//     ]);
+// });
 
 // 1. User Controller
 Route::middleware('auth')->group(function () {
     // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])->middleware('verified', 'is_user')->name('dashboard');
+    Route::get('/', [DashboardController::class, 'index'])->middleware('verified', 'is_user')->name('dashboard');
     
     // Browse, Request, Issued Books Route
     Route::get('/books', [UserBooksController::class, 'index'])->middleware('verified', 'is_user')->name('books');

@@ -64,10 +64,8 @@ class UserInvoices extends Controller
 
                 if (isset($response['id']) && $response['id'] != null) {
                     foreach ($response['links'] as $links) {
+                        
                         if ($links['rel'] == 'approve') {
-                            // Retrieve the access token from the PayPal token array
-                            $accessToken = $paypalToken['access_token'];
-
                             // Construct the approval URL with the access token
                             $approvalUrl = $links['href'];
 
@@ -87,7 +85,6 @@ class UserInvoices extends Controller
 
                             // Redirect the user to the PayPal checkout page
                             return $response->setContent('<script>window.location.href = "' . $approvalUrl . '";</script>');
-                            // return $approvalUrl;
                         }
                     }
                     return redirect()->route('cancel.payment')->with('error', 'Something went wrong.');

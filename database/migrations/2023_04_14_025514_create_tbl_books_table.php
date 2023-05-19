@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tbl_books', function (Blueprint $table) {
             $table->id();
             $table->string('book_name');
-            $table->string('description');
+            $table->string('description', 1000);
             $table->integer('category_id');
             $table->integer('author_id');
             $table->double('book_fees',15,2);

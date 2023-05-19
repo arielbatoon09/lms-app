@@ -1,6 +1,6 @@
 <script setup>
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-import { reactive } from 'vue';
+import { reactive, ref, computed } from 'vue';
 import { useForm, Head } from '@inertiajs/vue3';
 import Swal from 'sweetalert2';
 import { useToast } from 'vue-toast-notification';
@@ -9,7 +9,7 @@ import 'vue-toast-notification/dist/theme-sugar.css';
 const selectMOD = reactive('disabled');
 
 // Retrieve Data from Backend props
-defineProps({
+const props = defineProps({
     invoice: Object,
 });
 
@@ -20,6 +20,38 @@ const form = useForm({
     book_fees: null,
     mop: null,
 })
+
+
+// Pagination data
+const currentPage = ref(1);
+const perPage = 10;
+
+// Computed property for sliced rows
+const slicedRows = computed(() => {
+    const rows = props.invoice || []; // Access the invoice prop directly
+    const startIndex = (currentPage.value - 1) * perPage;
+    const endIndex = startIndex + perPage;
+    return rows.slice(startIndex, endIndex);
+});
+
+// Total pages calculation
+const totalPages = computed(() => {
+    const rows = props.invoice || []; // Access the invoice prop directly
+    return Math.ceil(rows.length / perPage);
+});
+
+// Pagination methods
+function nextPage() {
+    if (currentPage.value < totalPages.value) {
+        currentPage.value++;
+    }
+}
+
+function previousPage() {
+    if (currentPage.value > 1) {
+        currentPage.value--;
+    }
+}
 
 const handleMOD = (selectMOD, id, book_fees) => {
     form.id = id;
@@ -122,9 +154,9 @@ const handleMOD = (selectMOD, id, book_fees) => {
                             </thead>
                             <tbody>
                                 <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700"
-                                    v-for="(row, index) in invoice" :key="row.id">
+                                    v-for="(row, index) in slicedRows" :key="row.id">
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                        {{ index + 1 }}
+                                        {{ (currentPage - 1) * perPage + index + 1 }}
                                     </th>
                                     <td class="px-6 py-4">
                                         BK-{{ row.book_id }}
@@ -160,8 +192,22 @@ const handleMOD = (selectMOD, id, book_fees) => {
                                         <p>Pay Over-The-Counter</p>
                                     </td>
                                 </tr>
+
                             </tbody>
                         </table>
+                        <nav class="my-4 mx-6 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <button @click="previousPage" :disabled="currentPage === 1"
+                                    class="px-3 py-1 border rounded-lg"
+                                    :class="{ 'text-gray-400': currentPage === 1 }">Previous</button>
+                                <button @click="nextPage" :disabled="currentPage === totalPages"
+                                    class="px-3 py-1 border rounded-lg"
+                                    :class="{ 'text-gray-400': currentPage === totalPages }">Next</button>
+                            </div>
+                            <div>
+                                <span class="text-gray-500">{{ currentPage }} / {{ totalPages }}</span>
+                            </div>
+                        </nav>
                     </div>
                 </div>
             </div>

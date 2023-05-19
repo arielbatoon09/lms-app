@@ -25,7 +25,7 @@ const sidebarOpen = ref(true);
                 <Navmenu/>
             </div>
             <!-- Page-Content -->
-            <main class="w-full h-[700px] bg-gray-50">
+            <main class="w-full h-[900px] bg-gray-50">
                 <slot/>
             </main>
         </div>

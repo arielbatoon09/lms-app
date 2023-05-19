@@ -74,7 +74,7 @@ class IssuedBooksController extends Controller
                 $book = Books::find($bookIssued->book_id);
                 if ($book) {
                     $book->quantity = $book->quantity + 1;
-                    if ($book->is_active == 0) {
+                    if ($book->quantity == 0) {
                         $book->is_active = 1;
                     }
                     $book->update();
