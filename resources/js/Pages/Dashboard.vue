@@ -14,7 +14,11 @@ defineProps({
     paidInvoiceCount: Number,
     otcInvoiceCount: Number,
     returnedBooks: Number,
-    countByIsReturn: Number,
+    issuedBooksCount: Object,
+    issuedBooksCount: {
+        type: Object,
+        default: () => ({}),
+    },
 });
 
 </script>
@@ -31,6 +35,12 @@ defineProps({
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 lg:h-screen">
+                <div class="grid grid-cols-1 mb-4 px-4">
+                    <div
+                        class="bg-white px-4 py-5 h-full border-l-4 border-sky-500 shadow text-gray-600 text-xl">
+                        Welcome back, <span class="font-bold">{{ $page.props.auth.user.name }}</span> 👋
+                    </div>
+                </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10 px-4">
                     <Link :href="route('book-request')">
                     <div
@@ -88,13 +98,13 @@ defineProps({
                             <span>Issued Books</span>
                         </h2>
                         <p class="text-orange-500 mb-1">
-                            On-going: <span class="text-gray-600">123</span>
+                            On-going: <span class="text-gray-600">{{ issuedBooksCount[0] || 0 }}</span>
                         </p>
                         <p class="text-green-500 mb-1">
                             Returned: <span class="text-gray-600">{{ returnedBooks }}</span>
                         </p>
                         <p class="text-red-500">
-                            Overdue: <span class="text-gray-600">{{ countByIsReturn }}</span>
+                            Overdue: <span class="text-gray-600">{{ issuedBooksCount[2] || 0 }}</span>
                         </p>
                     </div>
                     </Link>

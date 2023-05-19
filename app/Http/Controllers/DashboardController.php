@@ -32,27 +32,28 @@ class DashboardController extends Controller
             $returnedBooks = IssuedBooks::where('user_id', $user_id)->where('is_return', 1)->count();
             $issuedBooks = IssuedBooks::where('user_id', $user_id)
                 ->get()
-                ->map(function ($book) {
-                    $toReturn = \Carbon\Carbon::parse($book->to_return);
+                ->map(function ($issued) {
+                    $toReturn = \Carbon\Carbon::parse($issued->to_return);
                     $now = \Carbon\Carbon::now();
                     $isOverdue = false;
 
-                    if ($book->is_return === 0) {
+                    if ($issued->is_return === 0) {
                         $isOverdue = $now->greaterThan($toReturn);
-                        $book->is_return = $isOverdue ? 2 : 0;
-                    } else if ($book->is_return !== 1) {
+                        $issued->is_return = $isOverdue ? 2 : 0;
+                    } else if ($issued->is_return !== 1) {
                         $isOverdue = $now->greaterThan($toReturn);
                     }
 
                     return [
-                        'is_return' => $book->is_return,
+                        'is_return' => $issued->is_return,
                     ];
                 });
-            // To count the is_return based on it's status 
-            $countByIsReturn = $issuedBooks->groupBy('is_return', 2)
+            // Acquire the issuedBooks then count the group is_return and return as an associative array
+            $issuedBooksCount = $issuedBooks->groupBy('is_return')
                 ->map(function ($group) {
-                    return $group->count();
-                });
+                    return count($group);
+                })
+                ->toArray();
 
             return Inertia::render('Dashboard', [
                 'allBooksCount' => $allBooksCount,
@@ -65,7 +66,7 @@ class DashboardController extends Controller
                 'paidInvoiceCount' => $paidInvoiceCount,
                 'otcInvoiceCount' => $otcInvoiceCount,
                 'returnedBooks' => $returnedBooks,
-                'countByIsReturn' => $countByIsReturn,
+                'issuedBooksCount' => $issuedBooksCount,
             ]);
         } catch (\Exception $error) {
             return $error->getMessage();

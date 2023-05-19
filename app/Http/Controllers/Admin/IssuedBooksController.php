@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Admin\Books;
 use App\Models\IssuedBooks;
 
 class IssuedBooksController extends Controller
@@ -69,6 +70,15 @@ class IssuedBooksController extends Controller
             if($bookIssued){
                 $bookIssued->is_return = $request->is_return;
                 $bookIssued->update();
+
+                $book = Books::find($bookIssued->book_id);
+                if ($book) {
+                    $book->quantity = $book->quantity + 1;
+                    if ($book->is_active == 0) {
+                        $book->is_active = 1;
+                    }
+                    $book->update();
+                }
 
                 return redirect()->back()
                     ->with('message', 'Updated book return status.');

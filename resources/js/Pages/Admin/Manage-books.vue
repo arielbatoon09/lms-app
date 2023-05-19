@@ -112,7 +112,7 @@ const updateBook = (id) => {
   <Head title="Admin Dashboard" />
   <AdminLayout>
     <!-- Body-Content -->
-    <div class="w-full h-fullpx-5 py-5 lg:px-10 lg:py-10 bg-gray-50">
+    <div class="w-full h-full px-5 py-5 lg:px-10 lg:py-10 bg-gray-50">
       <div class="h-full">
         <div class="flex items-center gap-2 text-2xl font-semibold text-gray-700">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
