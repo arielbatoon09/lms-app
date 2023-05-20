@@ -5,6 +5,8 @@ The library management system aims to provide a convenient platform for libraria
 - Signup and Signin
 - Email Verification
 - Reset Password using Email Link
+- ![Uploading image.png…]()
+
 
 **User Accessibility:**
 - Browse Books
