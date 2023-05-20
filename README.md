@@ -1,6 +1,8 @@
 ## Library Management System Project by Ariel Batoon
 The library management system aims to provide a convenient platform for librarians and book enthusiasts. It consists of an administrative interface for managing library resources, while users can easily navigate through the library's collection and conveniently pay fees online.
 
+YT Overview: https://youtu.be/ywliXgJq0n0
+
 **General Accessibility:**
 - Signup and Signin
 - Email Verification
