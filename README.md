@@ -3,19 +3,19 @@ The library management system aims to provide a convenient platform for libraria
 
 YT Overview: https://youtu.be/ywliXgJq0n0
 
-**General Accessibility:**
+**General Features:**
 - Signup and Signin
 - Email Verification
 - Reset Password using Email Link
 
-**User Accessibility:**
+**User Features:**
 - Browse Books
 - Book Request (Requesting to borrow book/s)
 - Can check Issued Books if it's already Overdue, Returned or still On-going
 - Invoice: Can pay using PayPal or can choose pay over-the-counter.
 - Profile Account Update
 
-**Admin Accessibility:**
+**Admin Features:**
 - Dashboard (Can see Total User, Total Available Books, Active Book Request, Total Sales, and Monthly Chart Analytics)
 - Manage Books (To add Book)
 - Book Authors (To add Author)
