@@ -40,7 +40,6 @@ use Inertia\Inertia;
 Route::middleware('auth')->group(function () {
     // Dashboard
     Route::get('/', [DashboardController::class, 'index'])->middleware('verified', 'is_user')->name('dashboard');
-    
     // Browse, Request, Issued Books Route
     Route::get('/books', [UserBooksController::class, 'index'])->middleware('verified', 'is_user')->name('books');
     Route::get('/book-details/{id}', [UserBooksController::class, 'getBookDetails'])->middleware('verified', 'is_user');
